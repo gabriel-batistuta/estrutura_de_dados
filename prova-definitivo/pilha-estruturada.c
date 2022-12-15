@@ -50,7 +50,7 @@ int main(){
 
          default: printf("OPCAO INVALIDA\n"); // se o usuario digitar um valor que seja diferente de um numero entre 1 até 4, o loop se repetira
       }
-   }while(opcao != 4);
+   } while(opcao != 4); // condição para que o programa continue rodando é que seja diferente de [4] (numero de sair)
 
    return 0;
 }
