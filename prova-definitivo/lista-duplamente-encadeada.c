@@ -1,8 +1,7 @@
 /*
-            Aula 257: Lista Duplamente Encadeada
 
-            Código escrito por Wagner Gaspar
-            Agosto de 2021
+            Lista Duplamente Encadeada
+
 */
 
 #include <stdio.h>
