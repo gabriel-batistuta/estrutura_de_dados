@@ -43,9 +43,11 @@ struct no *remover(struct no *t) {
 
 // definindo a função que IMPRIME e PERCORRE a pilha
 void percurso(struct no *t) {
+	printf("\n[----------PILHA DINAMICA----------]:");
+	printf("\n[ENDERECO DE MEMORIA - VALOR - ENDERECO DO PROXIMO ELEMENTO]\n");
 	while (t != NULL) {
 		// Enquanto o TOPO for DIFERENTE de NULO continua imprimindo o endereço do topo, dado do topo e endereço do proximo topo 
-	  	printf("\n%x - %d - %x\n",t,t->dado,t->prox);
+	  	printf("\n[%x - %d - %x]\n",t,t->dado,t->prox);
 	  	t = t->prox; // Mundando o valor do topo para proximo valor da pilha
 
 		// o topo só muda aqui nessa função pra percorrer e mostrar ao usuario
@@ -81,10 +83,17 @@ main() {
 			/*
 				se o topo for NULO é retornado que a pilha não tem elementos
 			*/
-			case 2: if (topo == NULL)
+			case 2: if (topo == NULL) {
 			           printf("\n[A PILHA VAZIA!!!]\n");
-			        else
-			        {
+					} else {
+						printf("\nELEMENTO A SER REMOVIDO: ['%d']\n",topo->dado);
+						if(PAUSE=="Windows") {
+							// PAUSE para sistema [Windows]
+							system("pause");
+						} else {
+							// PAUSE para sistema [Linux]
+							system("read -p \"\n(Pressione enter para sair...)\" saindo");
+						}
 			        	topo = remover(topo);
 					}
 			        break;
@@ -102,7 +111,7 @@ main() {
 							system("pause");
 						} else {
 							// PAUSE para sistema [Linux]
-							system("read -p \"\n[Pressione enter para sair...]\" saindo");
+							system("read -p \"\n(Pressione enter para sair...)\" saindo");
 						}
 					}
 			        break;
