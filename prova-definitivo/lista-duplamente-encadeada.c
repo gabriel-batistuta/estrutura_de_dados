@@ -7,40 +7,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// definindo struct NO[<-anterior,valor,->proximo]
 typedef struct no{
     int valor;
     struct no *proximo;
     struct no *anterior;
 }No;
 
-// procedimento para inserir no início
+// Função para inserir no início da Lista
 void inserir_no_inicio(No **lista, int num){
-    No *novo = malloc(sizeof(No));
+    No *novo = malloc(sizeof(No)); // ponteiro NOVO do NO = alocamento de memoria do tamanho da struct
 
-    if(novo){
-        novo->valor = num;
-        novo->proximo = *lista;
-        novo->anterior = '\0';
-        if(*lista)
-            (*lista)->anterior = novo;
-        *lista = novo;
-    }
-    else
+    if(novo) { // se houver uma variavel novo faça:
+        novo->valor = num; // valor de novo = num
+        novo->proximo = *lista; // valor de proximo = ponteiro de lista
+        novo->anterior = NULL; // valor de anterior = NULO
+        if(*lista) { // se houver ponteiro de lista
+            (*lista)->anterior = novo; // anterior de ponteiro de lista = novo
+        }
+        *lista = novo; // ponteiro de lista = novo
+    } else { // senão, mostre uma mensagem de ERRO
         printf("Erro ao alocar memoria!\n");
+    }
 }
 
-// procedimento para inserir no fim
+// função para inserir no fim da Lista
 void inserir_no_fim(No **lista, int num){
     No *aux, *novo = malloc(sizeof(No));
 
     if(novo){
         novo->valor = num;
-        novo->proximo = '\0';
+        novo->proximo = NULL;
 
         // é o primeiro?
-        if(*lista == '\0'){
+        if(*lista == NULL){
             *lista = novo;
-            novo->anterior = '\0';
+            novo->anterior = NULL;
         }
         else{
             aux = *lista;
@@ -61,9 +63,9 @@ void inserir_no_meio(No **lista, int num, int ant){
     if(novo){
         novo->valor = num;
         // é o primeiro?
-        if(*lista == '\0'){
-            novo->proximo = '\0';
-            novo->anterior = '\0';
+        if(*lista == NULL){
+            novo->proximo = NULL;
+            novo->anterior = NULL;
             *lista = novo;
         }
         else{
@@ -87,9 +89,9 @@ void inserir_ordenado(No **lista, int num){
     if(novo){
         novo->valor = num;
         // a lista está vazia?
-        if(*lista == '\0'){
-            novo->proximo = '\0';
-            novo->anterior = '\0';
+        if(*lista == NULL){
+            novo->proximo = NULL;
+            novo->anterior = NULL;
             *lista = novo;
         } // é o menor?
         else if(novo->valor < (*lista)->valor){
@@ -113,14 +115,14 @@ void inserir_ordenado(No **lista, int num){
 }
 
 No* remover(No **lista, int num){
-    No *aux, *remover = '\0';
+    No *aux, *remover = NULL;
 
     if(*lista){
         if((*lista)->valor == num){
             remover = *lista;
             *lista = remover->proximo;
             if(*lista)
-                (*lista)->anterior = '\0';
+                (*lista)->anterior = NULL;
         }
         else{
             aux = *lista;
@@ -138,7 +140,7 @@ No* remover(No **lista, int num){
 }
 
 No* buscar(No **lista, int num){
-    No *aux, *no = '\0';
+    No *aux, *no = NULL;
 
     aux = *lista;
     while(aux && aux->valor != num)
@@ -179,7 +181,7 @@ void imprimirContrario(No *no){
 int main(){
 
     int opcao, valor, anterior;
-    No *removido, *lista = '\0';
+    No *removido, *lista = NULL;
 
     do{
         printf("\n\t0 - Sair\n\t1 - Inserir no Inicio\n\t2 - inserir no Fim\n\t3 - Inserir no Meio\n\t4 - Inserir Ordenado\n\t5 - Remover\n\t6 - Imprimir\n\t7 - Buscar\n\t8 - ImprimirContrario\n");
