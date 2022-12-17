@@ -1,14 +1,27 @@
+/*************************************************/
+/*	       ALGORITMO BASE DA �RVORE AVL			     */
+/*        DISCIPLINA: ESTRUTURA DE DADOS         */
+/*           ANO/SEMESTRE: 2022.1                */
+/*  FUN��ES IMPLEMENTADAS: INSER��O E PERCURSOS  */
+/*   O QUE FALTA? REMO��O, ALTURA E QUANTIDADE   */
+/*************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __unix__
-#define SYS "clear"
+// definindo que comando usar para PAUSAR a tela a depender do sistema operacional do usuario
+#ifdef WIN32 || WIN64
+#define PAUSE "Windows" /* Se for Windows retorne [Windows] como uma variavel pra ser usada posteriormente */
+#else
+#define PAUSE "Linux" /* Se for != de Windows retorne [Linux] como uma variavel pra ser usada posteriormente */
 #endif
 
-#ifdef _WIN32 || _WIN64
-#define SYS "cls"
+// definindo que comando usar para LIMPAR a tela a depender do sistema operacional do usuario
+#ifdef WIN32 || WIN64
+#define LimpaTela "Windows" /* Se for Windows retorne [Windows] como uma variavel pra ser usada posteriormente */
+#else
+#define LimpaTela "Linux" /* Se for != de Windows retorne [Linux] como uma variavel pra ser usada posteriormente */
 #endif
-
 
 struct no{
    int dado, bal;
@@ -248,6 +261,13 @@ void desenho(struct no *r, int alt, int n){
       }
 
       printf("(%d)", r->dado);
+      if(PAUSE=="Windows") {
+         // PAUSE para sistema [Windows]
+         system("pause");
+      } else {
+         // PAUSE para sistema [Linux]
+         system("read -p \"\n(Pressione enter para sair...)\" saindo");
+      }
    }
 }
 
@@ -384,12 +404,12 @@ int main(){
          default: printf("Opcao invalida!\n");
       }
       if(opcao != 9){
-         if(SYS == "clear"){
+         if(LimpaTela == "Linux"){
             system("read -p \"Precione a tecla Enter para continuar\"\n");
-            system(SYS);
+            system("clear");
          }else{
             system("pause");
-            system(SYS);
+            // system(SYS);
          }
       }
 
