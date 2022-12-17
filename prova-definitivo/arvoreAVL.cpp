@@ -1,9 +1,9 @@
 /*************************************************/
-/*	       ALGORITMO BASE DA �RVORE AVL			 */
+/*	       ALGORITMO BASE DA ÁRVORE AVL			 */
 /*        DISCIPLINA: ESTRUTURA DE DADOS         */
 /*           ANO/SEMESTRE: 2022.1                */
-/*  FUN��ES IMPLEMENTADAS: INSER��O E PERCURSOS  */
-/*   O QUE FALTA? REMO��O, ALTURA E QUANTIDADE   */
+/*  FUNÇÕES IMPLEMENTADAS: INSERÇÃO E PERCURSOS  */
+/*   O QUE FALTA? REMOÇÃO, ALTURA E QUANTIDADE   */
 /*************************************************/
 
 #include <stdio.h>
@@ -152,51 +152,51 @@ struct no* inserir(struct no* r, int n) // INSERIR novos ELEMENTOS na arvore
         cout << "\nEsquerdo - Valor: " << r->dado << " - Balanceamento: " << r->bal << " - h: \n" << h;
         if (h == 0) // se o controle de balancemanto quiser testar se necessario o balanceamento, h terá valor 0
         {
-            switch (r->bal) //o parametro será o valor do balanceamento
+            switch (r->bal) // o parametro será o valor do balanceamento
             {
             case 1: r->bal = 0; //caso o valor seja 1, balanceia
                 h = 1;//controle de balanceamento balanceado
-                break;//parar
+                break;
             case 0: r->bal = -1;//caso o valor seja 0, colocar desbalanceamento para esquerda
-                break;//parar
+                break;
             case -1: r = caso1(r);//caso o valor seja -1, chama o balanceamento para esquerda
-                break;//parar
-            }//final do switch case para selecionar opera��es
+                break;
+            }
             cout << "\nEsquerdo - Valor: " << r->dado << "- Balanceamento: " << r->bal << " - h: \n" << h;
         }
     }
     else
     {
-        r->dir = inserir(r->dir, n);//inserir o valor no lado direito e realizar demais opera��es da fun��o atrav�s da recursividade
+        r->dir = inserir(r->dir, n); // inserir o valor no lado direito
         cout << "\nDireito - Valor: " << r->dado << "- Balanceamento: " << r->bal << "- h: \n" << h;
-        if (h == 0)//se o controle de balancemanto quiser testar se necessario o balanceamento, h ter� valor 0
+        if (h == 0)//se o controle de balancemanto quiser testar se necessario o balanceamento, h terá valor 0
         {
-            switch (r->bal)//o param�tro ser� o valor do balanceamento
+            switch (r->bal) //o paramqtro será o valor do balanceamento
             {
-            case -1: r->bal = 0;//caso o valor seja -1,balanceia
-                h = 1;//controle de balanceamento balanceado
-                break;//parar
+            case -1: r->bal = 0; // caso o valor seja -1,balanceia
+                h = 1; //controle de balanceamento balanceado
+                break;
             case 0: r->bal = 1;//caso o valor for 0,colocar desbalanceamento para direita
-                break;//parar
+                break;
             case 1: r = caso2(r);//caso o valor seja 1, chamar o balanceamento para a direita
-                break;//parar
-            }//final do switch case para selecionar opera��es e final das condi��es
+                break;
+            }
             cout << "\nDireito - Valor: " << r->dado << " - Balanceamento: " << r->bal << " - h: \n" << h;
         }
     }
-    return (r);//retorna o novo valor da raiz
-}//fim da fun��o
+    return (r);//retorna o valor da raiz pra ser utilizado em outras funções
+}
 
-no* remover(no* r, int chave) {//fun��o para remover os elementos da arvore
-    if (r == NULL) {//se a arvore n�o existir
+no* remover(no* r, int chave) {//função para remover os elementos da arvore
+    if (r == NULL) { //se a arvore não tiver nenhum elemento
         cout << "Valor nao encontrado!\n";
-        return (NULL);//retornar NULL ou 0
+        return (NULL); //retornar NULL ou 0
     }
     else {
-        if (r->dado == chave) {// se o valor que tiver na �rvore for igual a valor que deseja remover
-            if (r->esq == NULL && r->dir == NULL) {//se o valor a ser removido for a raiz
-                free(r);//remover o valor da memoria
-                return(NULL);//retorna 0
+        if (r->dado == chave) {// se o valor que tiver na árvore for igual ao valor que deseja remover
+            if (r->esq == NULL && r->dir == NULL) { // se o valor a ser removido for a raiz
+                free(r); // remover o valor da memoria
+                return(NULL); // retorna 0
             }
             else {
                 if (r->esq != NULL || r->dir != NULL) {
@@ -214,24 +214,25 @@ no* remover(no* r, int chave) {//fun��o para remover os elementos da arvore
                         aux = aux->dir;
                     r->dado = aux->dado;
                     aux->dado = chave;
-                    r->esq = remover(r->esq, chave);//ele remover� o valor que deseja quando ele terminar de percorre o lado esquerdo atrav�s da recursividade
+                    r->esq = remover(r->esq, chave);//ele removerá o valor que deseja quando ele terminar de percorre o lado esquerdo através da recursividade
                     return(r);
                 }
             }
         }
         else {//caso contrario
             if (chave < r->dado)
-                r->esq = remover(r->esq, chave);//ele remover� o valor que deseja quando ele terminar de percorre o lado esquerdo atrav�s da recursividade
+                r->esq = remover(r->esq, chave);//ele removerá o valor que deseja quando ele terminar de percorre o lado esquerdo através da recursividade
             else
-                r->dir = remover(r->dir, chave);//ele remover� o valor que deseja quando ele terminar de percorre o lado direito atrav�s da recursividade
+                r->dir = remover(r->dir, chave);//ele removerá o valor que deseja quando ele terminar de percorre o lado direito através da recursividade
             return(r);
-        }//final da condi��o
+        }
     }
 }
 
-int altura(const no* const no_ptr)//fun��o para saber a altura da arvore
+int altura(const no* const no_ptr)//função para saber a altura da arvore
 {
-    int altura_esq = 0;//variaveis inteiras para altura
+    //variaveis para alturas
+    int altura_esq = 0;
     int altura_dir = 0;
 
     if (no_ptr->esq)
@@ -245,66 +246,66 @@ int altura(const no* const no_ptr)//fun��o para saber a altura da arvore
     cout << altura;
 }
 
-void qtde(struct no* r){//fun��o que mostra a quantidade de elementos que existem na arvore
+void qtde(struct no* r){//função que mostra a quantidade de elementos que existem na arvore
     
 	if (r->esq != NULL)//valor reprecisa ser diferente de 0
         qtde(r->esq);
-    contador++;//incrementa��o, aumenta a quantidade de elementos
+    contador++;//incrementação, aumenta a quantidade de elementos
     if (r->dir != NULL)
         qtde(r->dir);    
-}//fim da condi��o
+}
 
-int main()//fun�a� principal
+int main() 
 {
-    struct no* raiz = NULL;//vari�vel para armazenar valores da �rvore
-    int novo = 0, opcao = 0; //novo para receber o valor que ser� inserido ou removido da �rvore, opcao para selecionar a opera��o ou a fun��o desejada
-    while (opcao != 8)//la�o de repeti��o das op��es de opera��es
+    struct no* raiz = NULL;//variável para armazenar valores da árvore
+    int novo = 0, opcao = 0; //novo para receber o valor que será inserido ou removido da árvore, opcao para selecionar a operação ou a função desejada
+    while (opcao != 8)//laço de repetição das opções de operações
     {
         cout << "\nDigite a opcao:\n1- Inserir\n2- Remover\n3- Percurso em Pre Ordem\n4- Percurso em Ordem Simetrica\n5- Percurso em pos Ordem\n6- Altura da arvore\n7- Quantidade de elementos\n8- Sair\n";
         cin >> opcao;
         switch (opcao) //compara��o de valores, caso o valor seja valido, o caso sera executado//
         {
-        case 1: cout << "\nQUAL O ELEMENTO A SER INSERIDO?\n";//caso o valor seja 1
+        case 1: cout << "\nQUAL O ELEMENTO A SER INSERIDO?\n";
             cin >> novo;
-            raiz = inserir(raiz, novo);//chamar fun��o de inserir elementos retornando o valor da raiz para a vari�vel raiz
-            break;//parar
-        case 2://caso o valor seja 2
+            raiz = inserir(raiz, novo);//chamar função de inserir elementos retornando o valor da raiz para a variável raiz
+            break;
+        case 2:
             cout << "Qual o valor que deseja remover?\n";
             cin >> (novo);
-            raiz = remover(raiz, novo);//chamar fun��o de remover elementos retornando o valor da raiz para a vari�vel raiz
-            break;//parar
-        case 3: if (raiz == NULL)//caso o valor seja 3, e se a arvore n�o tiver elementos
+            raiz = remover(raiz, novo);//chamar função de remover elementos retornando o valor da raiz para a vari�vel raiz
+            break;
+        case 3: if (raiz == NULL) // se a arvore não tiver elementos
             cout << "\nARVORE NAO EXISTE!\n";
-              else//caso contrario
-            pre(raiz);//chamar a fun��o do percurso em pr�-ordem
+              else// SENÂO
+            pre(raiz);//chamar a função do percurso em pré-ordem
             cout << endl;
             break;//parar
-        case 4: if (raiz == NULL)//caso o valor seja 4 e se a arvore n�o tiver elemetos
+        case 4: if (raiz == NULL) // se a arvore não tiver elemetos
             cout << "\nARVORE NAO EXISTE!\n";
               else
-            sim(raiz);//chamar a fun��o do percurso em ordem sim�trica
+            sim(raiz); // chamar a função do percurso em ordem simétrica
             cout << endl;
-            break;//parar
-        case 5: if (raiz == NULL)//caso o valor seja 5 e se a arvore n�o tiver elementos
+            break;
+        case 5: if (raiz == NULL) // se a arvore não tiver elementos
             cout << "\nARVORE NAO EXISTE!\n";
-              else//caso contrario
-            pos(raiz);//chamar a fun��o do percurso em p�s-ordem
+              else// SENÂO
+            pos(raiz);//chamar a função do percurso em pós-ordem
             cout << endl;
-            break;//parar
-        case 6: if (raiz == NULL)//caso o valor seja 6, e a arvore n�o tiver elementos
+            break;
+        case 6: if (raiz == NULL) // se a arvore não tiver elementos
             cout << "\nARVORE NAO EXISTE!\n";
               else
-            cout << altura(raiz) << "\n";//chama a fun��o da altura para atribuir valor a vari�vel altura indicando a altura da �rvore
-            break;//parar
-        case 7://caso o valor seja 7 e se a arvor n�o tiver elementos
+            cout << altura(raiz) << "\n";//chama a função da altura para atribuir valor a variável altura indicando a altura da árvore
+            break;
+        case 7: // se a arvor não tiver elementos
         	{
 			contador=0;
-			qtde(raiz);//chama a fun��o quantidade
+			qtde(raiz);//chama a função quantidade
 			cout << contador << endl;
-            break;//parar
+            break;
         	}
-        case 8: cout << "\nSAIR\n";//caso o valor seja 8, ele ir� sair do programa
-            break;//parar
+        case 8: cout << "\nSAIR\n"; // irá sair do programa
+            break;
         default: cout << "\nOPCAO INVALIDA\n";
         }
 
@@ -326,6 +327,6 @@ int main()//fun�a� principal
 
     }
     return 0;
-}//fim da fun��o principal e do programa
+} // FIM.
 
 
