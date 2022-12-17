@@ -1,156 +1,177 @@
-#include <stdio.h>//biblioteca ou arquivo de cabeçalho com as principais funções da linguagem C
-#include <conio.h>//biblioteca para usar funções
-#include <stdlib.h>//biblioteca ou arquivo de cabeçalho utilizado para funções de limpar tela e pausar até ser inserido alguma tecla
-#include <iostream>//biblioteca responsável pela manipulação de fluxo de dados 
+/*************************************************/
+/*	       ALGORITMO BASE DA ï¿½RVORE AVL			 */
+/*        DISCIPLINA: ESTRUTURA DE DADOS         */
+/*           ANO/SEMESTRE: 2022.1                */
+/*  FUNï¿½ï¿½ES IMPLEMENTADAS: INSERï¿½ï¿½O E PERCURSOS  */
+/*   O QUE FALTA? REMOï¿½ï¿½O, ALTURA E QUANTIDADE   */
+/*************************************************/
 
-//para usar os recursos de entrada e saída da biblioteca iostream//
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream> 
+
 using namespace std;
 
-// dentro da struct temos ponteiros que é um tipo de dado cujo valor se refere// 
-//diretamente a um outro valor alocado em outra área da memória//
-struct no {
-    int dado, bal;//dado = recebe o valor, bal para balanceamento
-    struct no* dir, * esq; //dir para valores a direita e esq para valores a esquerda
-};//final da declaração de struct
+// definindo que comando usar para PAUSAR a tela a depender do sistema operacional do usuario
+#ifdef WIN32 || WIN64
+#define PAUSE "Windows" /* Se for Windows retorne [Windows] como uma variavel pra ser usada posteriormente */
+#else
+#define PAUSE "Linux" /* Se for != de Windows retorne [Linux] como uma variavel pra ser usada posteriormente */
+#endif
 
-int h;//variáveis globais, h para controle de balanceamento
+// definindo que comando usar para LIMPAR a tela a depender do sistema operacional do usuario
+#ifdef WIN32 || WIN64
+#define LimpaTela "Windows" /* Se for Windows retorne [Windows] como uma variavel pra ser usada posteriormente */
+#else
+#define LimpaTela "Linux" /* Se for != de Windows retorne [Linux] como uma variavel pra ser usada posteriormente */
+#endif
+
+// modelo de struct NO com dado e balanceamento int e ponteiros de subarvores direitas e esquerdas 
+struct no {
+    int dado, bal;
+    struct no* dir, * esq; 
+};
+
+// declaraÃ§Ã£o de variaveis globais que sÃ£o usadas em qualquer luagr do codigo
+int h; // para controlar o balanceamento
 int contador=0;
-//funçao que mostra percurso em pré ordem//
-void pre(struct no* r)
-{
+
+// FUNCTION percurso em PRÃ‰ ORDEM//
+void pre(struct no* r) {
     cout << r->dado << " ";
-    if (r->esq != NULL)//se na esquerda tiver algo
-        pre(r->esq);//recursividade com a função pre
+    if (r->esq != NULL) //se na esquerda tiver algo
+        pre(r->esq); //recursividade com pre ordem
     if (r->dir != NULL)
         pre(r->dir);
-}//fim da condição
-//função que mostra percusso em ordem simétrica//
-void sim(struct no* r)
-{ //''NULL'' define o valor de ponteiros nulos, que equivalem a zero// 
+}
+
+// FUNCTION percusso em ORDEM SIMETRICA
+void sim(struct no* r) { // se for diferente de [NULL] significa que hÃ¡ algo 
     if (r->esq != NULL)//se na esquerda tiver algo
-        sim(r->esq);//recursividade com a função pre
+        sim(r->esq);//recursividade com pre ordem
     cout << r->dado << " ";
     if (r->dir != NULL)
         sim(r->dir);
-}//fim da condição
-//função que mostra percusso em pós ordem//
-void pos(struct no* r)
-{
+}
+
+// FUNCTION percusso em PÃ“S ORDEM
+void pos(struct no* r) {
     if (r->esq != NULL)//se na esquerda tiver algo
-        pos(r->esq);//recursividade com a função pre
+        pos(r->esq);//recursividade com a funÃ§Ã£o pre
     if (r->dir != NULL)
         pos(r->dir);
     cout << r->dado << " ";
-}//fim da condição
-
-struct no* caso1(struct no* r)//Função caso esteja desbalanceado para esquerda
-{
-    struct no* ptu, * ptv;//declaração de variáveis auxiliares
-    ptu = r->esq;//ptu vai armazenar os valores do lado esquerdo
-    if (ptu->bal == -1)//se no balanceamento dizer que está desbalanceado para o lado esquerdo representado por -1
-    {
-        r->esq = ptu->dir;// o valor do lado direito vai para a esquerda
-        ptu->dir = r;// o valor da raiz vai para a direita
-        r->bal = 0;//deixa balanceado
-        r = ptu;//o que estava na esquerda agora vira raiz
-    }
-    else //caso contrario
-    {
-        ptv = ptu->dir;//ptv recebe o que está a direita da esquerda
-        ptu->dir = ptv->esq;//o que estava na esquerda da direita agora será o que está na direita da esquerda
-        ptv->esq = ptu;//o valor da esquerda vai para a esquerda da direita
-        r->esq = ptv->dir;//o valor da extrema direita ou seja o maior valor vai para o lado esquerdo da raiz
-        ptv->dir = r;//a valor da raiz vai para a extrema direita
-        if (ptv->bal == -1)//se estiver desbalanceado para esquerda
-            r->bal = 1;//balanceamento recebe 1 e fica desbalanceado para direita
-        else//caso contrario
-            r->bal = 0;//balanceado
-        if (ptv->bal == 1)//se estiver desbalanceado para direita
-            ptu->bal = -1;//balanceamento recebe -1 e fica desbalanceado para esquerda
-        else//caso contrario
-            ptu->bal = 0;//balanceado
-        r = ptv;// a raiz será o valor que estava na esquerda
-    }
-    r->bal = 0;//balanceada
-    h = 1;//controle de balanceamento balanceado
-    return(r);//retorna o valor novo da raiz
 }
 
-struct no* caso2(struct no* r)//Função caso esteja desbalanceado para direita
-{
-    struct no* ptu, * ptv;//declaração de variáveis auxiliares
-    ptu = r->dir;//ptv vai armazenar os valores do lado direito
-    if (ptu->bal == 1)//se no balanceamento dizer que está desbalanceado para o lado direito representado por 1
+// se estiver DESBALANCEADO para ESQUERDA
+struct no* caso1(struct no* r) {  
+
+    struct no* ptu, * ptv;
+    ptu = r->esq; // ptu = valores do lado esquerdo
+    if (ptu->bal == -1) // se no balanceamento estiver desbalanceado para o lado esquerdo (que pode ser menor que '0')
     {
-        r->dir = ptu->esq;//o valor da esquerda vai para direita
-        ptu->esq = r;// o valor da raiz vai para a esquerda 
-        r->bal = 0;//balanceia
-        r = ptu;//o que estava na direita agora vira raiz
+        r->esq = ptu->dir; //  o valor do lado direito vai para a esquerda
+        ptu->dir = r; // o valor da raiz vai para a direita
+        r->bal = 0; // balanceia a raiz
+        r = ptu; // a esquerda agora vira raiz
     }
-    else//caso contrario
+    else // SENÃ‚O
     {
-        ptv = ptu->esq;//ptv recebe o que está a esquerda da direita
-        ptu->esq = ptv->dir;//o que estava na direita da esquerda agora será o que está na esquerda da direita
-        ptv->dir = ptu;//o valor da direita vai para a direita da esquerda
-        r->dir = ptv->esq;//o valor da extrema esquerda ou seja o menor valor vai para o lado direito da raiz
-        ptv->esq = r;//a valor da raiz vai para a extrema esquerda
-        if (ptv->bal == 1)//se estiver desbalanceado para direita
-            r->bal = -1;//balanceamento recebe -1 e fica desbalanceado para esquerda
-        else//caso contrario
-            r->bal = 0;//balanceado
-        if (ptv->bal == -1)//se estiver desbalanceado para esquerda
-            ptu->bal = 1;//balanceamento recebe 1 e fica desbalanceado para direita
-        else//caso contrario
-            ptu->bal = 0;//balanceado
-        r = ptv;// a raiz será o valor que estava na esquerda
+        ptv = ptu->dir; // ptv = direita da esquerda
+        ptu->dir = ptv->esq; // o que estava na esquerda da direita agora serÃ¡ o que estÃ¡ na direita da esquerda
+        ptv->esq = ptu; // esquerda vai para a esquerda da direita
+        r->esq = ptv->dir; //o valor da extrema direita (o maior valor) vai para o lado esquerdo da raiz
+        ptv->dir = r; // a raiz vai para a extrema direita
+        if (ptv->bal == -1) // se estiver desbalanceado para esquerda
+            r->bal = 1; // balanceamento recebe 1 e fica desbalanceado para direita
+        else // SENÃƒO
+            r->bal = 0; // balanceado
+        if (ptv->bal == 1) // desbalanceado para direita
+            ptu->bal = -1; // balanceamento recebe -1 e fica desbalanceado para esquerda
+        else // SENÃ‚O
+            ptu->bal = 0; // balanceado
+        r = ptv; // a raiz serÃ¡ o valor que estava na esquerda
     }
-    r->bal = 0;//balanceado
-    h = 1;//controle de balanceamento balanceado
-    return(r);//retorna um novo valor da raiz
+    r->bal = 0; // balanceada
+    h = 1; // controle de balanceamento balanceado
+    return(r); // retorna o valor da raiz pra ser utilizado em outras funÃ§Ãµes
 }
 
-struct no* inserir(struct no* r, int n)//inserir novos elementos na arvore//
+struct no* caso2(struct no* r) //FUNCTION desbalanceado para direita
 {
-    if (r == NULL)//se a raiz for nulo
+    struct no* ptu, * ptv;
+    ptu = r->dir; // ptv armazena valores do lado direito
+    if (ptu->bal == 1) //se no balanceamento dizer que estÃ¡ desbalanceado para o lado direito 
+    {
+        r->dir = ptu->esq; // esquerda vai para direita
+        ptu->esq = r; // raiz vai para a esquerda 
+        r->bal = 0; // balanceia
+        r = ptu; // direita agora vira raiz
+    }
+    else // SENÃ‚O
+    {
+        ptv = ptu->esq; // ptv recebe o que estÃ¡ a esquerda da direita
+        ptu->esq = ptv->dir; // o que estava na direita da esquerda agora serÃ¡ o que estÃ¡ na esquerda da direita
+        ptv->dir = ptu; // o valor da direita vai para a direita da esquerda
+        r->dir = ptv->esq; // o valor da extrema esquerda (o menor valor) vai para o lado direito da raiz
+        ptv->esq = r;// o valor da raiz vai para a extrema esquerda
+        if (ptv->bal == 1)// se estiver desbalanceado para direita
+            r->bal = -1;// balanceamento recebe -1 e fica desbalanceado para esquerda
+        else// SENÃ‚O
+            r->bal = 0; // balanceado
+        if (ptv->bal == -1) // desbalanceado para esquerda
+            ptu->bal = 1;// balanceamento recebe 1 e fica desbalanceado para direita
+        else // SENÃ‚o
+            ptu->bal = 0; // balanceado
+        r = ptv; // a raiz serÃ¡ o valor que estava na esquerda
+    }
+    r->bal = 0; //balanceado
+    h = 1; //controle de balanceamento balanceado
+    return(r); //retorna um valor da raiz pra ser utilizado por outras funÃ§Ãµes
+}
+
+struct no* inserir(struct no* r, int n) // INSERIR novos ELEMENTOS na arvore
+{
+    if (r == NULL) // se a raiz for nula
     {
 
-        r = (struct no*)malloc(sizeof(struct no));  //a função malloc aloca espaço memória para inserir valores
-        r->dado = n;//o valor inserido será o valor da raiz
-        r->esq = NULL;//o lado esquerdo da raiz será nulo até ser inserido outro valor menor que a raiz
-        r->dir = NULL;//o lado direito da raiz será nulo até ser inserido outro valor maior que a raiz
-        r->bal = 0;//balanceia
-        h = 0;//controle de balanceiamento indica que seja feito balanceamento caso necessario
+        r = (struct no*)malloc(sizeof(struct no));  //a funÃ§Ã£o malloc aloca espaÃ§o memÃ³ria equivalente ao tamanho da struct e do tipo ponteiro de NO para inserir valores
+        r->dado = n; // o valor inserido serÃ¡ o valor da raiz
+        r->esq = NULL; //o lado esquerdo da raiz serÃ¡ nulo atÃ© ser inserido outro valor menor que a raiz
+        r->dir = NULL; //o lado direito da raiz serÃ¡ nulo atÃ© ser inserido outro valor maior que a raiz
+        r->bal = 0; //balanceia
+        h = 0; // controle de balanceiamento 
     }
-    else if (n == r->dado)//se o valor novo for igual a um elemento já existente
+    else if (n == r->dado)//se o valor novo for igual a um elemento jÃ¡ existente
     {
         cout << "\nELEMENTO JA EXISTE\n";
     }
-    else if (n < r->dado)//se o valor novo for menor do que os valores que já existem
+    else if (n < r->dado)//se o valor novo for menor do que os valores que jÃ¡ existem
     {
-        r->esq = inserir(r->esq, n);//inserir o valor no lado esquerdo e realizar demais operações da função através da recursividade
+        r->esq = inserir(r->esq, n);//inserir o valor no lado esquerdo e realizar demais operaÃ§Ãµes da funÃ§Ã£o atravÃ©s da recursividade
         cout << "\nEsquerdo - Valor: " << r->dado << " - Balanceamento: " << r->bal << " - h: \n" << h;
-        if (h == 0)//se o controle de balancemanto quiser testar se necessario o balanceamento, h terá valor 0
+        if (h == 0) // se o controle de balancemanto quiser testar se necessario o balanceamento, h terÃ¡ valor 0
         {
-            switch (r->bal)//o paramêtro será o valor do balanceamento
+            switch (r->bal) //o parametro serÃ¡ o valor do balanceamento
             {
-            case 1: r->bal = 0;//caso o valor seja 1, balanceia
+            case 1: r->bal = 0; //caso o valor seja 1, balanceia
                 h = 1;//controle de balanceamento balanceado
                 break;//parar
             case 0: r->bal = -1;//caso o valor seja 0, colocar desbalanceamento para esquerda
                 break;//parar
             case -1: r = caso1(r);//caso o valor seja -1, chama o balanceamento para esquerda
                 break;//parar
-            }//final do switch case para selecionar operações
+            }//final do switch case para selecionar operaï¿½ï¿½es
             cout << "\nEsquerdo - Valor: " << r->dado << "- Balanceamento: " << r->bal << " - h: \n" << h;
         }
     }
     else
     {
-        r->dir = inserir(r->dir, n);//inserir o valor no lado direito e realizar demais operações da função através da recursividade
+        r->dir = inserir(r->dir, n);//inserir o valor no lado direito e realizar demais operaï¿½ï¿½es da funï¿½ï¿½o atravï¿½s da recursividade
         cout << "\nDireito - Valor: " << r->dado << "- Balanceamento: " << r->bal << "- h: \n" << h;
-        if (h == 0)//se o controle de balancemanto quiser testar se necessario o balanceamento, h terá valor 0
+        if (h == 0)//se o controle de balancemanto quiser testar se necessario o balanceamento, h terï¿½ valor 0
         {
-            switch (r->bal)//o paramêtro será o valor do balanceamento
+            switch (r->bal)//o paramï¿½tro serï¿½ o valor do balanceamento
             {
             case -1: r->bal = 0;//caso o valor seja -1,balanceia
                 h = 1;//controle de balanceamento balanceado
@@ -159,20 +180,20 @@ struct no* inserir(struct no* r, int n)//inserir novos elementos na arvore//
                 break;//parar
             case 1: r = caso2(r);//caso o valor seja 1, chamar o balanceamento para a direita
                 break;//parar
-            }//final do switch case para selecionar operações e final das condições
+            }//final do switch case para selecionar operaï¿½ï¿½es e final das condiï¿½ï¿½es
             cout << "\nDireito - Valor: " << r->dado << " - Balanceamento: " << r->bal << " - h: \n" << h;
         }
     }
     return (r);//retorna o novo valor da raiz
-}//fim da função
+}//fim da funï¿½ï¿½o
 
-no* remover(no* r, int chave) {//função para remover os elementos da arvore
-    if (r == NULL) {//se a arvore não existir
+no* remover(no* r, int chave) {//funï¿½ï¿½o para remover os elementos da arvore
+    if (r == NULL) {//se a arvore nï¿½o existir
         cout << "Valor nao encontrado!\n";
         return (NULL);//retornar NULL ou 0
     }
     else {
-        if (r->dado == chave) {// se o valor que tiver na árvore for igual a valor que deseja remover
+        if (r->dado == chave) {// se o valor que tiver na ï¿½rvore for igual a valor que deseja remover
             if (r->esq == NULL && r->dir == NULL) {//se o valor a ser removido for a raiz
                 free(r);//remover o valor da memoria
                 return(NULL);//retorna 0
@@ -193,22 +214,22 @@ no* remover(no* r, int chave) {//função para remover os elementos da arvore
                         aux = aux->dir;
                     r->dado = aux->dado;
                     aux->dado = chave;
-                    r->esq = remover(r->esq, chave);//ele removerá o valor que deseja quando ele terminar de percorre o lado esquerdo através da recursividade
+                    r->esq = remover(r->esq, chave);//ele removerï¿½ o valor que deseja quando ele terminar de percorre o lado esquerdo atravï¿½s da recursividade
                     return(r);
                 }
             }
         }
         else {//caso contrario
             if (chave < r->dado)
-                r->esq = remover(r->esq, chave);//ele removerá o valor que deseja quando ele terminar de percorre o lado esquerdo através da recursividade
+                r->esq = remover(r->esq, chave);//ele removerï¿½ o valor que deseja quando ele terminar de percorre o lado esquerdo atravï¿½s da recursividade
             else
-                r->dir = remover(r->dir, chave);//ele removerá o valor que deseja quando ele terminar de percorre o lado direito através da recursividade
+                r->dir = remover(r->dir, chave);//ele removerï¿½ o valor que deseja quando ele terminar de percorre o lado direito atravï¿½s da recursividade
             return(r);
-        }//final da condição
+        }//final da condiï¿½ï¿½o
     }
 }
 
-int altura(const no* const no_ptr)//função para saber a altura da arvore
+int altura(const no* const no_ptr)//funï¿½ï¿½o para saber a altura da arvore
 {
     int altura_esq = 0;//variaveis inteiras para altura
     int altura_dir = 0;
@@ -224,72 +245,87 @@ int altura(const no* const no_ptr)//função para saber a altura da arvore
     cout << altura;
 }
 
-void qtde(struct no* r){//função que mostra a quantidade de elementos que existem na arvore
+void qtde(struct no* r){//funï¿½ï¿½o que mostra a quantidade de elementos que existem na arvore
     
 	if (r->esq != NULL)//valor reprecisa ser diferente de 0
         qtde(r->esq);
-    contador++;//incrementação, aumenta a quantidade de elementos
+    contador++;//incrementaï¿½ï¿½o, aumenta a quantidade de elementos
     if (r->dir != NULL)
         qtde(r->dir);    
-}//fim da condição
+}//fim da condiï¿½ï¿½o
 
-int main()//funçaõ principal
+int main()//funï¿½aï¿½ principal
 {
-    struct no* raiz = NULL;//variável para armazenar valores da árvore
-    int novo = 0, opcao = 0; //novo para receber o valor que será inserido ou removido da árvore, opcao para selecionar a operação ou a função desejada
-    while (opcao != 8)//laço de repetição das opções de operações
+    struct no* raiz = NULL;//variï¿½vel para armazenar valores da ï¿½rvore
+    int novo = 0, opcao = 0; //novo para receber o valor que serï¿½ inserido ou removido da ï¿½rvore, opcao para selecionar a operaï¿½ï¿½o ou a funï¿½ï¿½o desejada
+    while (opcao != 8)//laï¿½o de repetiï¿½ï¿½o das opï¿½ï¿½es de operaï¿½ï¿½es
     {
         cout << "\nDigite a opcao:\n1- Inserir\n2- Remover\n3- Percurso em Pre Ordem\n4- Percurso em Ordem Simetrica\n5- Percurso em pos Ordem\n6- Altura da arvore\n7- Quantidade de elementos\n8- Sair\n";
         cin >> opcao;
-        switch (opcao) //comparação de valores, caso o valor seja valido, o caso sera executado//
+        switch (opcao) //comparaï¿½ï¿½o de valores, caso o valor seja valido, o caso sera executado//
         {
         case 1: cout << "\nQUAL O ELEMENTO A SER INSERIDO?\n";//caso o valor seja 1
             cin >> novo;
-            raiz = inserir(raiz, novo);//chamar função de inserir elementos retornando o valor da raiz para a variável raiz
+            raiz = inserir(raiz, novo);//chamar funï¿½ï¿½o de inserir elementos retornando o valor da raiz para a variï¿½vel raiz
             break;//parar
         case 2://caso o valor seja 2
             cout << "Qual o valor que deseja remover?\n";
             cin >> (novo);
-            raiz = remover(raiz, novo);//chamar função de remover elementos retornando o valor da raiz para a variável raiz
+            raiz = remover(raiz, novo);//chamar funï¿½ï¿½o de remover elementos retornando o valor da raiz para a variï¿½vel raiz
             break;//parar
-        case 3: if (raiz == NULL)//caso o valor seja 3, e se a arvore não tiver elementos
+        case 3: if (raiz == NULL)//caso o valor seja 3, e se a arvore nï¿½o tiver elementos
             cout << "\nARVORE NAO EXISTE!\n";
               else//caso contrario
-            pre(raiz);//chamar a função do percurso em pré-ordem
+            pre(raiz);//chamar a funï¿½ï¿½o do percurso em prï¿½-ordem
             cout << endl;
             break;//parar
-        case 4: if (raiz == NULL)//caso o valor seja 4 e se a arvore não tiver elemetos
+        case 4: if (raiz == NULL)//caso o valor seja 4 e se a arvore nï¿½o tiver elemetos
             cout << "\nARVORE NAO EXISTE!\n";
               else
-            sim(raiz);//chamar a função do percurso em ordem simétrica
+            sim(raiz);//chamar a funï¿½ï¿½o do percurso em ordem simï¿½trica
             cout << endl;
             break;//parar
-        case 5: if (raiz == NULL)//caso o valor seja 5 e se a arvore não tiver elementos
+        case 5: if (raiz == NULL)//caso o valor seja 5 e se a arvore nï¿½o tiver elementos
             cout << "\nARVORE NAO EXISTE!\n";
               else//caso contrario
-            pos(raiz);//chamar a função do percurso em pós-ordem
+            pos(raiz);//chamar a funï¿½ï¿½o do percurso em pï¿½s-ordem
             cout << endl;
             break;//parar
-        case 6: if (raiz == NULL)//caso o valor seja 6, e a arvore não tiver elementos
+        case 6: if (raiz == NULL)//caso o valor seja 6, e a arvore nï¿½o tiver elementos
             cout << "\nARVORE NAO EXISTE!\n";
               else
-            cout << altura(raiz) << "\n";//chama a função da altura para atribuir valor a variável altura indicando a altura da árvore
+            cout << altura(raiz) << "\n";//chama a funï¿½ï¿½o da altura para atribuir valor a variï¿½vel altura indicando a altura da ï¿½rvore
             break;//parar
-        case 7://caso o valor seja 7 e se a arvor não tiver elementos
+        case 7://caso o valor seja 7 e se a arvor nï¿½o tiver elementos
         	{
 			contador=0;
-			qtde(raiz);//chama a função quantidade
+			qtde(raiz);//chama a funï¿½ï¿½o quantidade
 			cout << contador << endl;
             break;//parar
         	}
-        case 8: cout << "\nSAIR\n";//caso o valor seja 8, ele irá sair do programa
+        case 8: cout << "\nSAIR\n";//caso o valor seja 8, ele irï¿½ sair do programa
             break;//parar
         default: cout << "\nOPCAO INVALIDA\n";
         }
-        system("pause");//esperar apertar algo
-        system("cls");//limpar a tela
+
+        if(PAUSE=="Windows") {
+            // PAUSE para sistema [Windows]
+            system("pause");
+        } else {
+            // PAUSE para sistema [Linux]
+            system("read -p \"\n(Pressione enter para sair...)\" saindo");
+        }
+
+        if(LimpaTela=="Windows") {
+			// LimparTela para sistema [Windows]
+			system("Windows");
+		} else {
+			// LimparTela para sistema [Linux]
+			system("clear");
+		}
+
     }
     return 0;
-}//fim da função principal e do programa
+}//fim da funï¿½ï¿½o principal e do programa
 
 
