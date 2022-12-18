@@ -4,6 +4,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// definindo que comando usar para PAUSAR a tela a depender do sistema operacional do usuario
+#ifdef WIN32 || WIN64
+#define PAUSE "Windows" /* Se for Windows retorne [Windows] como uma variavel pra ser usada posteriormente */
+#else
+#define PAUSE "Linux" /* Se for != de Windows retorne [Linux] como uma variavel pra ser usada posteriormente */
+#endif
+
+// definindo que comando usar para LIMPAR a tela a depender do sistema operacional do usuario
+#ifdef WIN32 || WIN64
+#define LimpaTela "Windows" /* Se for Windows retorne [Windows] como uma variavel pra ser usada posteriormente */
+#else
+#define LimpaTela "Linux" /* Se for != de Windows retorne [Linux] como uma variavel pra ser usada posteriormente */
+#endif
+
 // definindo struct NO[<-anterior,valor,->proximo]
 typedef struct no{
     int valor;
@@ -144,11 +158,39 @@ int main(){
             printf("Digite um valor: ");
             scanf("%d", &valor);
             inserir_no_inicio(&lista, valor);
+            if(PAUSE=="Windows") {
+                // PAUSE para sistema [Windows]
+                system("pause");
+            } else {
+                // PAUSE para sistema [Linux]
+                system("read -p \"\n(Pressione enter para sair...)\" saindo");
+            }
+            if(LimpaTela=="Windows") {
+			// LimparTela para sistema [Windows]
+			system("Windows");
+            } else {
+                // LimparTela para sistema [Linux]
+                system("clear");
+            }
             break;
         case 2: // INSERIR NO FIM
             printf("Digite um valor: ");
             scanf("%d", &valor);
             inserir_no_fim(&lista, valor);
+            if(PAUSE=="Windows") {
+                // PAUSE para sistema [Windows]
+                system("pause");
+            } else {
+                // PAUSE para sistema [Linux]
+                system("read -p \"\n(Pressione enter para sair...)\" saindo");
+            }
+            if(LimpaTela=="Windows") {
+			// LimparTela para sistema [Windows]
+			system("Windows");
+            } else {
+                // LimparTela para sistema [Linux]
+                system("clear");
+            }
             break;
         case 3: // REMOVER ELEMENTO
             printf("Digite um valor a ser removido: ");
@@ -158,14 +200,56 @@ int main(){
                 // imprime elemento e o libera da memoria
                 printf("Elemento a ser removido: %d\n", removido->valor);
                 free(removido);
+                if(PAUSE=="Windows") {
+                    // PAUSE para sistema [Windows]
+                    system("pause");
+                } else {
+                    // PAUSE para sistema [Linux]
+                    system("read -p \"\n(Pressione enter para sair...)\" saindo");
+                }
+                if(LimpaTela=="Windows") {
+                // LimparTela para sistema [Windows]
+                system("Windows");
+                } else {
+                    // LimparTela para sistema [Linux]
+                    system("clear");
+                }
             }
             else {
                 // elemento não encontrado na lista
                 printf("Elemento inexistente!\n");
+                if(PAUSE=="Windows") {
+                    // PAUSE para sistema [Windows]
+                    system("pause");
+                } else {
+                    // PAUSE para sistema [Linux]
+                    system("read -p \"\n(Pressione enter para sair...)\" saindo");
+                }
+                if(LimpaTela=="Windows") {
+                // LimparTela para sistema [Windows]
+                system("Windows");
+                } else {
+                    // LimparTela para sistema [Linux]
+                    system("clear");
+                }
             }
             break;
         case 4: // IMPRIME A LISTA
             imprimir(lista);
+            if(PAUSE=="Windows") {
+                // PAUSE para sistema [Windows]
+                system("pause");
+            } else {
+                // PAUSE para sistema [Linux]
+                system("read -p \"\n(Pressione enter para sair...)\" saindo");
+            }
+            if(LimpaTela=="Windows") {
+			// LimparTela para sistema [Windows]
+			system("Windows");
+            } else {
+                // LimparTela para sistema [Linux]
+                system("clear");
+            }
             break;
         case 5: // BUSCA E INFORMA SE HÁ ESSE VALOR NA LISTA, SENÃO HOUVER IMPRIMA QUE NÃO FOI ENCONTRADO
             printf("Digite um valor a ser buscado: ");
@@ -173,8 +257,29 @@ int main(){
             removido = buscar(&lista, valor);
             if(removido) {
                 printf("Elemento encontrado: %d\n", removido->valor);
+                if(LimpaTela=="Windows") {
+                // LimparTela para sistema [Windows]
+                system("Windows");
+                } else {
+                    // LimparTela para sistema [Linux]
+                    system("clear");
+                }
             } else {
                 printf("Elemento nao encontrado!\n");
+                if(PAUSE=="Windows") {
+                    // PAUSE para sistema [Windows]
+                    system("pause");
+                } else {
+                    // PAUSE para sistema [Linux]
+                    system("read -p \"\n(Pressione enter para sair...)\" saindo");
+                }
+                if(LimpaTela=="Windows") {
+                // LimparTela para sistema [Windows]
+                system("Windows");
+                } else {
+                    // LimparTela para sistema [Linux]
+                    system("clear");
+                }
             }
             break;
         default: // mensagem de erro pra quando for inserido uma opção invalida
