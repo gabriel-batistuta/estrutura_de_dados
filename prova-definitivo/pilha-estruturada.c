@@ -37,10 +37,11 @@ int main(){
                printf("\nA PILHA ESTA VAZIA\n");
             }else{
                printf("\nFILA ATUAL: => ");
-               for(x = 0; x <= index; x++){ // iteração pra imprimir automaticamente na tela cada item da fila até chegar no valor da variavel index
-                  printf("['%d'] - ", fila[x]);
+               printf("[");
+               for(x = 0; x <= index; x++) { // iteração pra imprimir automaticamente na tela cada item da fila até chegar no valor da variavel index
+                  printf("'%d', ", fila[x]);
                }
-               printf("\b\b"); // apaga os dois últimos caracteres impressos na tela: ['SPACE', '-'] pra melhor vizualização do usuario
+               printf("\b\b]\n"); // apaga os dois últimos caracteres impressos na tela: ['SPACE', '-'] pra melhor vizualização do usuario
             }
             break;
 
