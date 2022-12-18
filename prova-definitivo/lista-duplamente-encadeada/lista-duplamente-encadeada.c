@@ -257,6 +257,13 @@ int main(){
             removido = buscar(&lista, valor);
             if(removido) {
                 printf("Elemento encontrado: %d\n", removido->valor);
+                if(PAUSE=="Windows") {
+                    // PAUSE para sistema [Windows]
+                    system("pause");
+                } else {
+                    // PAUSE para sistema [Linux]
+                    system("read -p \"\n(Pressione enter para sair...)\" saindo");
+                }
                 if(LimpaTela=="Windows") {
                 // LimparTela para sistema [Windows]
                 system("Windows");
